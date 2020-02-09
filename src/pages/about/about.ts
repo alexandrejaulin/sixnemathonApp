@@ -31,7 +31,7 @@ export class AboutPage {
   constructor(public navCtrl: NavController) {
     this.combinaison=new Array<string>();
     this.pieces=100;
-    this.oldPieces=0;
+    this.oldPieces=100;
     this.initRoulettes();
   }
 
@@ -137,11 +137,30 @@ export class AboutPage {
       this.combinaison = new Array<string>();
       document.getElementById("boutonLancer").removeAttribute("disabled");
     }
+    this.animationCompteur();
+
+   }
+
+   async animationCompteur(){
+     let timeToWait=800/(Math.abs(this.pieces-this.oldPieces));
+     if(this.pieces>this.oldPieces){
+        while(this.oldPieces!=this.pieces){
+          this.oldPieces++;
+          await this.timer(timeToWait);
+        }
+      }
+      if(this.pieces<this.oldPieces){
+        while(this.oldPieces!=this.pieces){
+          this.oldPieces--;
+          await this.timer(timeToWait);
+        }
+      }
    }
 
    analyseResultat(resultat:string[], tousLesSymboles:string[]):number{
     let piecesGagnees = 0;
     let nbSymboleCovered = 0;
+    let symboleBouffe = 0;
 
     tousLesSymboles.forEach((symbole) => {
 
@@ -150,13 +169,13 @@ export class AboutPage {
             nbSymboleCovered += 1;
             switch (symbole) {
                 case "star":piecesGagnees+=10;break;
-                case "weed":piecesGagnees+=5;break;
+                case "weed":piecesGagnees+=4;break;
                 case "caca":piecesGagnees-=5;break;
                 case "1664":piecesGagnees+=5;break;
-                case "croques":;break;
-                case "philadelphia":;break;
-                case "pain":;break;
-                case "pitch":;break;
+                case "croques":symboleBouffe++;break;
+                case "philadelphia":symboleBouffe++;break;
+                case "pain":symboleBouffe++;break;
+                case "pitch":symboleBouffe++;break;
                 case "pls":piecesGagnees-=15;break;
             }
         }
@@ -164,14 +183,14 @@ export class AboutPage {
             nbSymboleCovered += 2;
             switch (symbole) {
                 case "star":piecesGagnees+=100;break;
-                case "weed":piecesGagnees+=50;break;
+                case "weed":piecesGagnees+=42;break;
                 case "caca":piecesGagnees-=20;break;
                 case "1664":piecesGagnees+=50;break;
                 case "action":;break;
-                case "croques":;break;
-                case "philadelphia":;break;
-                case "pain":;break;
-                case "pitch":;break;
+                case "croques":symboleBouffe+=2;break;
+                case "philadelphia":symboleBouffe+=2;break;
+                case "pain":symboleBouffe+=2;break;
+                case "pitch":symboleBouffe+=2;break;
                 case "pls":piecesGagnees-=150;break;
             }
         }
@@ -179,7 +198,7 @@ export class AboutPage {
             nbSymboleCovered += 3;
             switch (symbole) {
                 case "star":piecesGagnees+=10000;break;
-                case "weed":piecesGagnees+=500;break;
+                case "weed":piecesGagnees+=420;break;
                 case "caca":piecesGagnees-=100;break;
                 case "1664":piecesGagnees+=1664;break;
                 case "action":;break;
@@ -189,6 +208,12 @@ export class AboutPage {
                 case "pitch":piecesGagnees+=5000;break;
                 case "pls":piecesGagnees-=15000;break;
             }
+        }
+        if(symboleBouffe==3){
+          piecesGagnees+=220
+        }
+        if(symboleBouffe==2){
+          piecesGagnees+=20
         }
     } else {
         
