@@ -6,6 +6,18 @@ page-about {
         font-family: 'Righteous', cursive;
         margin-top:0;
         color: gold;
+        max-width: 250px;
+        max-height: 100px;
+        overflow: hidden;
+    }
+
+    .img{
+      margin: auto;
+      margin-top:20px;
+    }
+
+    .grid {
+      width: 80%;
     }
 
 

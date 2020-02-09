@@ -24,12 +24,14 @@ export class AboutPage {
   combinaison:string[];
   tousLesSymboles:string[];
   pieces: number;
+  oldPieces: number;
 
   nbRoulettesStop:number;
 
   constructor(public navCtrl: NavController) {
     this.combinaison=new Array<string>();
     this.pieces=100;
+    this.oldPieces=0;
     this.initRoulettes();
   }
 
@@ -132,7 +134,6 @@ export class AboutPage {
    reactiverBoutonLancer(){
     if(this.nbRoulettesStop==3){
       this.pieces+=this.analyseResultat(this.combinaison, this.tousLesSymboles);
-      document.getElementById("coin").style.webkitAnimationPlayState = "running";
       this.combinaison = new Array<string>();
       document.getElementById("boutonLancer").removeAttribute("disabled");
     }
@@ -307,6 +308,10 @@ export class AboutPage {
     this.img02="assets/imgs/"+this.rouletteDroite.get(0)+".png";
     this.img12="assets/imgs/"+this.rouletteDroite.get(1)+".png";
     this.img22="assets/imgs/"+this.rouletteDroite.get(2)+".png";
+  }
+
+  onCountoEnd(){
+    this.oldPieces = this.pieces;
   }
 
 }
