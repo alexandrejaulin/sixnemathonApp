@@ -182,10 +182,10 @@ export class AboutPage {
         if (this.nbOccurencesList(symbole, resultat) == 2) {
             nbSymboleCovered += 2;
             switch (symbole) {
-                case "star":piecesGagnees+=100;break;
-                case "weed":piecesGagnees+=42;break;
-                case "caca":piecesGagnees-=20;break;
-                case "1664":piecesGagnees+=50;break;
+                case "star":piecesGagnees+=100;this.play("bigwin");break;
+                case "weed":piecesGagnees+=42;this.play("weedwin");break;
+                case "caca":piecesGagnees-=20;this.play("caca2");break;
+                case "1664":piecesGagnees+=50;this.play("biere");break;
                 case "action":;break;
                 case "croques":symboleBouffe+=2;break;
                 case "philadelphia":symboleBouffe+=2;break;
@@ -197,31 +197,31 @@ export class AboutPage {
         if (this.nbOccurencesList(symbole, resultat) == 3) {
             nbSymboleCovered += 3;
             switch (symbole) {
-                case "star":piecesGagnees+=10000;break;
+                case "star":piecesGagnees+=10000;this.play("bigwin");break;
                 case "weed":piecesGagnees+=420;break;
-                case "caca":piecesGagnees-=100;break;
-                case "1664":piecesGagnees+=1664;break;
+                case "caca":piecesGagnees-=100;this.play("caca3");break;
+                case "1664":piecesGagnees+=1664;this.play("biere");this.play("bigwin");break;
                 case "action":;break;
-                case "croques":piecesGagnees+=5000;break;
-                case "philadelphia":piecesGagnees+=5000;break;
-                case "pain":piecesGagnees+=5000;break;
-                case "pitch":piecesGagnees+=5000;break;
+                case "croques":piecesGagnees+=5000;this.play("bigwin");break;
+                case "philadelphia":piecesGagnees+=5000;this.play("bigwin");break;
+                case "pain":piecesGagnees+=5000;this.play("bigwin");break;
+                case "pitch":piecesGagnees+=5000;this.play("bigwin");break;
                 case "pls":piecesGagnees-=15000;break;
             }
         }
         if(symboleBouffe==3){
+          this.play("bigwin");
           piecesGagnees+=220
         }
         if(symboleBouffe==2){
           piecesGagnees+=20
         }
-    } else {
-        
     }
 
     })
         
-
+    if(piecesGagnees>0){this.play("coin")}
+    else {this.play("lose1")}
     return piecesGagnees;
 
    }
@@ -234,6 +234,13 @@ export class AboutPage {
       }
     })
     return nbOccurences;
+}
+
+play(name: String){
+    let audio = new Audio();
+    audio.src = "assets/audio/"+name+".wav";
+    audio.load();
+    audio.play();
 }
 
   initRoulettes(){
