@@ -14,3 +14,58 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+.gain{
+    color: gold;
+}
+
+.perd{
+    color: red;
+}
+
+.gain{
+    --background: #FFDB22;
+    --color:#FF3F22;
+    --border-style:solid;
+    --border-width :5px;
+    --border-color:#FF3F22;
+}
+
+.toast-ios .toast-message {
+    font-size: 4rem;
+    color:gold;
+    padding: 1.5rem;
+}
+
+.toast-ios .toast-wrapper {
+    left:20px;
+    right:140px;
+    top:370px !important;
+    display: flex !important;  
+    flex-wrap: wrap !important;
+    margin: auto;
+    border-radius: 0.65rem;
+    position: absolute;
+    z-index: 10;
+    background: 
+    rgba(0, 0, 0, 0);
+}
+
+.toast-md .toast-message {
+    font-size: 4rem;
+    color:gold;
+    padding: 1.5rem;
+}
+
+.toast-md .toast-wrapper {
+    left:20px;
+    right:140px;
+    top:370px !important;
+    display: flex !important;  
+    flex-wrap: wrap !important;
+    margin: auto;
+    border-radius: 0.65rem;
+    position: absolute;
+    z-index: 10;
+    background: 
+    rgba(0, 0, 0, 0);
+}

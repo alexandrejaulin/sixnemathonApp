@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController ,ToastController} from 'ionic-angular';
 import { Roulette } from '../../app/roulette';
 
 @Component({
@@ -25,13 +25,16 @@ export class AboutPage {
   tousLesSymboles:string[];
   pieces: number;
   oldPieces: number;
+  gain:number;
 
   nbRoulettesStop:number;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public toastController: ToastController) {
     this.combinaison=new Array<string>();
     this.pieces=100;
     this.oldPieces=100;
+    this.gain=null;
+    
     this.initRoulettes();
   }
 
@@ -191,14 +194,14 @@ export class AboutPage {
                 case "philadelphia":symboleBouffe+=2;break;
                 case "pain":symboleBouffe+=2;break;
                 case "pitch":symboleBouffe+=2;break;
-                case "pls":piecesGagnees-=150;break;
+                case "pls":piecesGagnees-=150;this.play("pls2");break;
             }
         }
         if (this.nbOccurencesList(symbole, resultat) == 3) {
             nbSymboleCovered += 3;
             switch (symbole) {
                 case "star":piecesGagnees+=10000;this.play("bigwin");break;
-                case "weed":piecesGagnees+=420;break;
+                case "weed":piecesGagnees+=420;this.play("weedbigwin");this.play("bigwin");break;
                 case "caca":piecesGagnees-=100;this.play("caca3");break;
                 case "1664":piecesGagnees+=1664;this.play("biere");this.play("bigwin");break;
                 case "action":;break;
@@ -206,7 +209,7 @@ export class AboutPage {
                 case "philadelphia":piecesGagnees+=5000;this.play("bigwin");break;
                 case "pain":piecesGagnees+=5000;this.play("bigwin");break;
                 case "pitch":piecesGagnees+=5000;this.play("bigwin");break;
-                case "pls":piecesGagnees-=15000;break;
+                case "pls":piecesGagnees-=15000;this.play("pls3");break;
             }
         }
         if(symboleBouffe==3){
@@ -222,6 +225,7 @@ export class AboutPage {
         
     if(piecesGagnees>0){this.play("coin")}
     else {this.play("lose1")}
+    this.toast(piecesGagnees);
     return piecesGagnees;
 
    }
@@ -241,6 +245,29 @@ play(name: String){
     audio.src = "assets/audio/"+name+".wav";
     audio.load();
     audio.play();
+}
+
+async toast(gain:number){ 
+  let signe;
+  let css;
+
+  if(gain>0){
+    signe="+";
+    css="gain";
+  } else {
+    signe="-";
+    css="perd";
+  }
+  gain=Math.abs(gain)
+
+  const toast = await this.toastController.create({
+    message: signe+gain,
+    position: 'middle',
+    duration: 0.7,
+    cssClass: css
+  });
+  toast.present();
+
 }
 
   initRoulettes(){
@@ -271,6 +298,7 @@ play(name: String){
     rouletteMilieu.push("action");
     rouletteMilieu.push("1664");
     rouletteMilieu.push("weed");
+    rouletteMilieu.push("caca");
     rouletteMilieu.push("weed");
     rouletteMilieu.push("pls");
     rouletteMilieu.push("1664");
@@ -286,7 +314,6 @@ play(name: String){
     rouletteMilieu.push("pain");
     rouletteMilieu.push("star");
     rouletteMilieu.push("1664");
-    rouletteMilieu.push("caca");
     rouletteMilieu.push("caca");
     this.rouletteMilieu = new Roulette(rouletteMilieu);
 
