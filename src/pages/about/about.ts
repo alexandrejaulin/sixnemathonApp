@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController ,ToastController} from 'ionic-angular';
+import { NavController ,ToastController, AlertController, Events} from 'ionic-angular';
 import { Roulette } from '../../app/roulette';
 
 @Component({
@@ -21,6 +21,10 @@ export class AboutPage {
   rouletteMilieu:Roulette;
   rouletteDroite:Roulette;
 
+  veriteList:string[];
+  actionList:string[];
+  participants:string[];
+
   combinaison:string[];
   tousLesSymboles:string[];
   pieces: number;
@@ -29,13 +33,19 @@ export class AboutPage {
 
   nbRoulettesStop:number;
 
-  constructor(public navCtrl: NavController, public toastController: ToastController) {
+  constructor(public navCtrl: NavController, 
+              public toastController: ToastController,
+              public alertCtrl: AlertController,
+              public events: Events) {
     this.combinaison=new Array<string>();
     this.pieces=100;
     this.oldPieces=100;
     this.gain=null;
+
+    this.events.publish('pieces:created', this.pieces);
     
     this.initRoulettes();
+    this.initActionOuVerite();
   }
 
   lancerLaMachine(){
@@ -52,6 +62,7 @@ export class AboutPage {
   }
 
   async lancerLaRouletteGauche(){
+    this.events.publish('pieces:created', this.pieces);
     let audio = new Audio();
     audio.src = "assets/audio/beep.wav";
 
@@ -141,7 +152,6 @@ export class AboutPage {
       document.getElementById("boutonLancer").removeAttribute("disabled");
     }
     this.animationCompteur();
-
    }
 
    async animationCompteur(){
@@ -189,7 +199,7 @@ export class AboutPage {
                 case "weed":piecesGagnees+=42;this.play("weedwin");break;
                 case "caca":piecesGagnees-=20;this.play("caca2");break;
                 case "1664":piecesGagnees+=50;this.play("biere");break;
-                case "action":;break;
+                case "action":this.actionOuVerite();this.play("verite");break;
                 case "croques":symboleBouffe+=2;break;
                 case "philadelphia":symboleBouffe+=2;break;
                 case "pain":symboleBouffe+=2;break;
@@ -204,7 +214,7 @@ export class AboutPage {
                 case "weed":piecesGagnees+=420;this.play("weedbigwin");this.play("bigwin");break;
                 case "caca":piecesGagnees-=100;this.play("caca3");break;
                 case "1664":piecesGagnees+=1664;this.play("biere");this.play("bigwin");break;
-                case "action":;break;
+                case "action":piecesGagnees+=100;this.actionOuVerite();this.play("bigwin");this.play("verite");break;
                 case "croques":piecesGagnees+=5000;this.play("bigwin");break;
                 case "philadelphia":piecesGagnees+=5000;this.play("bigwin");break;
                 case "pain":piecesGagnees+=5000;this.play("bigwin");break;
@@ -238,7 +248,65 @@ export class AboutPage {
       }
     })
     return nbOccurences;
-}
+  }
+
+  rouleUnPet(){
+    let alert = this.alertCtrl.create({
+      title: '420',
+      subTitle: "ROULE UN PET'",
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  actionOuVerite(){
+    let alert = this.alertCtrl.create({
+      title: 'Action ou vérité ?',
+      buttons: [
+        {
+          text: 'Action',
+          handler: () => {
+            this.action();
+          }
+        },
+        {
+          text: 'Vérité',
+          handler: () => {
+            this.verite();
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  verite(){
+    let numberRand = Math.floor(Math.random() * 5) ;
+    let alert = this.alertCtrl.create({
+      title: 'Vérité',
+      subTitle: this.veriteList[numberRand],
+      buttons: ['OK']
+    });
+    alert.present();
+
+  }
+
+  action(){
+    let numberRand1 = Math.floor(Math.random() * 2) ;
+    let numberRand2 = Math.floor(Math.random() * 6) ;
+    this.actionList = new Array<string>();
+    this.actionList.push("Change de place avec"+this.participants[numberRand2]);
+    this.actionList.push("Bois un shot");
+    this.actionList.push("Passe un coup de fil à un beauf");
+
+    let alert = this.alertCtrl.create({
+      title: 'Action',
+      subTitle: this.actionList[numberRand1],
+      buttons: ['OK']
+    });
+    alert.present();
+
+  }
 
 play(name: String){
     let audio = new Audio();
@@ -369,8 +437,27 @@ async toast(gain:number){
     this.img22="assets/imgs/"+this.rouletteDroite.get(2)+".png";
   }
 
-  onCountoEnd(){
-    this.oldPieces = this.pieces;
+  initActionOuVerite(){
+    this.veriteList = new Array<string>();
+    this.veriteList.push("Qui trouves tu le moins drôle ici ?");
+    this.veriteList.push("Qui roule les pires pet' ?");
+    this.veriteList.push("Selon toi, qui baise le plus mal ?");
+    this.veriteList.push("Qui a le moins marqué les esprits avec ses films durant les 6némath' ?");
+    this.veriteList.push("Qui est le plus drôle ?");
+    this.veriteList.push("Si tu n'avais pas le choix, qui sucerais-tu ?");
+    this.veriteList.push("Actuellement, à qui décernes-tu la crotte ?");
+    this.veriteList.push("Actuellement, à qui décernes-tu l'étoile ?");
+
+    this.participants = new Array<string>();
+    this.participants.push(" Gweg");
+    this.participants.push(" Tintax");
+    this.participants.push(" Titi");
+    this.participants.push(" Louitos");
+    this.participants.push(" Polo");
+    this.participants.push(" Caca");
+    this.participants.push(" Jojo");
   }
+
+
 
 }
